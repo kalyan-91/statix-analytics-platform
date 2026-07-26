@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STATIX — Make Your Data Make Sense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ================= LANDING PAGE ================= -->
+<div id="landing">
+  <div class="top-nav">
+    <div class="logo-mark">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="lg1" x1="0" y1="40" x2="40" y2="0"><stop offset="0" stop-color="#5546FF"/><stop offset="0.55" stop-color="#FF6A3D"/><stop offset="1" stop-color="#14C8B4"/></linearGradient></defs>
+        <rect x="4" y="22" width="6" height="14" rx="2" fill="url(#lg1)"/>
+        <rect x="14" y="14" width="6" height="22" rx="2" fill="url(#lg1)" opacity="0.85"/>
+        <rect x="24" y="6" width="6" height="30" rx="2" fill="url(#lg1)" opacity="0.7"/>
+        <circle cx="33" cy="8" r="4" fill="url(#lg1)"/>
+      </svg>
+      <span class="logo-text">STATIX</span>
+    </div>
+    <div class="top-links">
+      <a href="#" data-page="analyze">Analyze</a>
+      <a href="#" data-page="projects">Projects</a>
+      <a href="#" data-page="about">About</a>
+    </div>
+  </div>
+
+  <div class="hero" id="heroSection">
+    <div class="hero-eyebrow">Dynamic Data Analytics Engine</div>
+    <h1>STATIX</h1>
+    <h2>Make Your Data Make Sense.</h2>
+    <p>Upload any dataset, explore your data, create visualizations, and discover meaningful insights — all calculated live from whatever you bring.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="btnUploadHero">↑ Upload Dataset</button>
+      <button class="btn btn-secondary" id="btnSample">Try Sample Dataset</button>
+      <button class="btn btn-secondary" id="btnConnectDB"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:5px;"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>Connect Database</button>
+    </div>
+
+    <div class="upload-zone" id="dropZone">
+      <div class="icon">↑</div>
+      <div class="main-txt">Drop your dataset here</div>
+      <div class="sub-txt">or click to browse files &nbsp;•&nbsp; CSV • XLSX supported</div>
+    </div>
+    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" class="hidden">
+
+    <div class="feature-strip">
+      <div class="feature-chip"><span class="dot" style="background:var(--blue)"></span>Auto column detection</div>
+      <div class="feature-chip"><span class="dot" style="background:var(--purple)"></span>Live cleaning tools</div>
+      <div class="feature-chip"><span class="dot" style="background:var(--cyan)"></span>Adaptive charts</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= LOADING OVERLAY ================= -->
+<div id="loadingOverlay" class="hidden">
+  <div class="spinner"></div>
+  <div id="loadingMsg">Reading your dataset...</div>
+</div>
+
+<!-- ================= CONNECT DATABASE MODAL ================= -->
+<div id="dbModalOverlay" class="modal-overlay hidden">
+  <div class="modal-card" style="width:500px;">
+    <div class="modal-head">
+      <h3>Connect a Database</h3>
+      <button class="modal-close" id="btnCloseDbModal">✕</button>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button class="mini-btn" id="dbTabNative" style="flex:1;">Native Database</button>
+      <button class="mini-btn" id="dbTabApi" style="flex:1;">API / URL</button>
+    </div>
+
+    <div id="dbPanelNative">
+      <p class="modal-sub">Runs your query through the local STATIX Connector on your machine, using the real MySQL/PostgreSQL/Oracle driver — the same way MySQL Workbench or pgAdmin would connect. <a href="#" id="dbConnectorHelp" style="color:var(--blue);font-weight:600;">Haven't set it up yet?</a></p>
+      <div class="modal-field">
+        <label>Database type</label>
+        <select id="dbType">
+          <option value="mysql">MySQL</option>
+          <option value="postgresql">PostgreSQL</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div class="modal-field" style="flex:2;">
+          <label>Host</label>
+          <input type="text" id="dbHost" placeholder="localhost or db.company.com">
+        </div>
+        <div class="modal-field" style="flex:1;">
+          <label>Port</label>
+          <input type="text" id="dbPort" placeholder="3306">
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>Database / Service name</label>
+        <input type="text" id="dbName" placeholder="my_database">
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div class="modal-field" style="flex:1;">
+          <label>Username</label>
+          <input type="text" id="dbUser" placeholder="root">
+        </div>
+        <div class="modal-field" style="flex:1;">
+          <label>Password</label>
+          <input type="password" id="dbPass" placeholder="••••••••">
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>SQL query (SELECT only)</label>
+        <input type="text" id="dbQuery" placeholder="SELECT * FROM your_table">
+      </div>
+      <div class="modal-field">
+        <label>Connector address</label>
+        <input type="text" id="dbConnectorUrl" value="http://localhost:8420">
+      </div>
+    </div>
+
+    <div id="dbPanelApi" class="hidden">
+      <p class="modal-sub">Point STATIX at any REST/HTTP endpoint that returns your data — a REST API, a Supabase/PostgREST route, a published Google Sheet CSV link, and so on.</p>
+      <div class="modal-field">
+        <label>Endpoint URL</label>
+        <input type="text" id="dbUrl" placeholder="https://your-api.example.com/data">
+      </div>
+      <div class="modal-field">
+        <label>Authorization header (optional)</label>
+        <input type="text" id="dbAuth" placeholder="Bearer eyJhbGciOi...">
+      </div>
+      <div class="modal-field">
+        <label>Response format</label>
+        <select id="dbFormat">
+          <option value="auto">Auto-detect</option>
+          <option value="json">JSON (array of records)</option>
+          <option value="csv">CSV / plain text</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="dbError" class="modal-error hidden"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="btnCancelDb">Cancel</button>
+      <button class="btn btn-primary" id="btnSubmitDb">Connect &amp; Load</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= GENERIC PROMPT / CONFIRM MODAL ================= -->
+<div id="genericModalOverlay" class="modal-overlay hidden">
+  <div class="modal-card" style="width:420px;">
+    <div class="modal-head">
+      <h3 id="genericModalTitle">Title</h3>
+      <button class="modal-close" id="btnCloseGenericModal">✕</button>
+    </div>
+    <p class="modal-sub" id="genericModalSub" style="display:none;"></p>
+    <div class="modal-field" id="genericModalInputWrap">
+      <input type="text" id="genericModalInput" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="btnCancelGeneric">Cancel</button>
+      <button class="btn btn-primary" id="btnConfirmGeneric">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<div id="app">
+  <div class="app-topbar">
+    <div class="left">
+      <div class="logo-mark">
+        <svg class="logo-icon" viewBox="0 0 40 40" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="22" width="6" height="14" rx="2" fill="#3D5AFE"/>
+          <rect x="14" y="14" width="6" height="22" rx="2" fill="#8B5CF6"/>
+          <rect x="24" y="6" width="6" height="30" rx="2" fill="#06B6D4"/>
+          <circle cx="33" cy="8" r="4" fill="#3D5AFE"/>
+        </svg>
+        <span class="logo-text" style="font-size:16px;">STATIX</span>
+      </div>
+      <div class="primary-nav">
+        <button data-topnav="analyze" class="active">Analyze</button>
+        <button data-topnav="projects">Projects</button>
+        <button data-topnav="about">About</button>
+      </div>
+    </div>
+    <div class="right">
+      <div class="dataset-pill"><b id="pillFileName">—</b> · <span id="pillDims">—</span></div>
+      <button class="btn btn-secondary" id="btnOpenPalette" style="padding:9px 14px;font-size:13px;gap:6px;">⌕ Search <span style="opacity:0.55;font-size:11px;">Ctrl K</span></button>
+      <button class="btn btn-secondary" id="btnSaveProject" style="padding:9px 16px;font-size:13px;">💾 Save as Project</button>
+      <button class="btn btn-secondary" id="btnNewUpload" style="padding:9px 16px;font-size:13px;">↑ New Dataset</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <div class="sidebar" id="workspaceSidebar">
+      <div class="side-indicator" id="sideIndicator"></div>
+      <button data-tab="overview" class="active"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Overview</span></button>
+      <button data-tab="dataview"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span>Data</span></button>
+      <button data-tab="clean"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 9 15"/><path d="m9 15-4 1 1-4 10.5-10.5a2.1 2.1 0 0 1 3 3Z"/><path d="M4 20h16"/></svg><span>Clean</span></button>
+      <button data-tab="stats"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="5" y2="11"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="19" y1="20" x2="19" y2="14"/></svg><span>Statistics</span></button>
+      <button data-tab="visualize"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l7 4"/></svg><span>Visualize</span></button>
+      <button data-tab="insights"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a6 6 0 0 0-4 10.5c.6.6 1 1.6 1 2.5h6c0-.9.4-1.9 1-2.5A6 6 0 0 0 12 2Z"/></svg><span>Insights</span></button>
+      <button data-tab="report"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg><span>Report</span></button>
+    </div>
+
+    <div class="main-panel" id="mainPanel">
+      <!-- panels injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ================= PROJECTS PAGE ================= -->
+<div id="projectsPage" class="hidden" style="max-width:900px;margin:0 auto;padding:60px 24px;">
+  <div class="panel-header"><div><h2>Projects</h2><p>Intentionally saved analyses — datasets, cleaning, charts and insights preserved together.</p></div>
+  </div>
+  <div id="projectsList"></div>
+</div>
+
+<!-- ================= ABOUT PAGE ================= -->
+<div id="aboutPage" class="hidden" style="max-width:760px;margin:0 auto;padding:60px 24px;">
+  <div class="hero-eyebrow">About STATIX</div>
+  <h1 style="font-size:44px;margin:16px 0;background:linear-gradient(110deg,#1B2333,var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;">What is STATIX?</h1>
+  <p style="color:var(--text-light);font-size:16px;line-height:1.7;margin-bottom:22px;">STATIX is a simple and interactive platform that helps you understand your own data. There's no fixed template underneath — every chart, statistic, and insight is calculated live from whatever file you upload.</p>
+  <div class="grid-2" style="margin-bottom:26px;">
+    <div class="card"><b>Upload any dataset</b><p style="color:var(--text-light);font-size:13.5px;margin-top:6px;">CSV or Excel, any columns, any shape.</p></div>
+    <div class="card"><b>Clean your data</b><p style="color:var(--text-light);font-size:13.5px;margin-top:6px;">Handle missing values, duplicates, and types.</p></div>
+    <div class="card"><b>Calculate statistics</b><p style="color:var(--text-light);font-size:13.5px;margin-top:6px;">Numeric, categorical and date summaries.</p></div>
+    <div class="card"><b>Discover insights</b><p style="color:var(--text-light);font-size:13.5px;margin-top:6px;">Patterns generated from your actual numbers.</p></div>
+  </div>
+  <h3 style="margin-bottom:8px;">Vision</h3>
+  <p style="color:var(--text-light);font-size:15px;line-height:1.7;">Make data analysis simple, visual, attractive, and accessible to everyone — the dataset controls the application, not the other way around.</p>
+  <button class="btn btn-secondary" style="margin-top:26px;" onclick="goHome()">← Back home</button>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="kbd-hint" id="kbdHint">Tip: press <kbd>1</kbd>–<kbd>7</kbd> for tabs, <kbd>Ctrl</kbd>+<kbd>K</kbd> to search</div>
+
+<div id="paletteOverlay" class="palette-overlay hidden">
+  <div class="palette-box">
+    <input id="paletteInput" type="text" placeholder="Jump to a tab or column… (Esc to close)" autocomplete="off">
+    <div class="palette-list" id="paletteList"></div>
+  </div>
+</div>
+
+<script src="launch-gate.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
