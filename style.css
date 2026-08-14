@@ -80,6 +80,26 @@ input,select{font-family:inherit;}
   100%{transform:translate(-2.5%,2%) scale(1.06);}
 }
 .top-nav,.hero{position:relative;z-index:1;}
+
+/* ---------- Landing page decorative animated charts ---------- */
+.landing-chart-deco{position:absolute;z-index:0;pointer-events:none;opacity:.4;}
+.landing-chart-deco--left{top:130px;left:38px;width:190px;}
+.landing-chart-deco--right{top:150px;right:44px;width:220px;}
+.deco-bar{transform-box:fill-box;transform-origin:bottom;animation:decoBarGrow 2.6s ease-in-out infinite;}
+.deco-bar:nth-child(1){animation-delay:0s;}
+.deco-bar:nth-child(2){animation-delay:.18s;}
+.deco-bar:nth-child(3){animation-delay:.36s;}
+.deco-bar:nth-child(4){animation-delay:.54s;}
+.deco-bar:nth-child(5){animation-delay:.72s;}
+.deco-bar:nth-child(6){animation-delay:.9s;}
+@keyframes decoBarGrow{0%,100%{transform:scaleY(.45);}50%{transform:scaleY(1);}}
+.deco-line{stroke-dasharray:7 9;animation:decoLineFlow 1.4s linear infinite;}
+@keyframes decoLineFlow{to{stroke-dashoffset:-32;}}
+.deco-dot{fill:#FF6A3D;transform-box:fill-box;transform-origin:center;animation:decoDotPulse 2s ease-in-out infinite;}
+.deco-dot--2{animation-delay:.4s;}
+.deco-dot--3{animation-delay:.8s;}
+@keyframes decoDotPulse{0%,100%{transform:scale(1);opacity:.75;}50%{transform:scale(1.6);opacity:.25;}}
+@media(max-width:1100px){.landing-chart-deco{display:none;}}
 .top-nav{
   display:flex;align-items:center;justify-content:space-between;
   padding:24px 48px;
@@ -330,6 +350,35 @@ tbody tr:hover{background:#FAFAFE;}
 .history-item .undo{margin-left:auto;font-size:12px;font-weight:600;color:var(--blue);}
 
 /* ================================================================
+   TRANSFORM TAB
+   ================================================================ */
+.subtab-row{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+.subtab-btn.active{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-soft);}
+.field-label{font-size:12px;font-weight:600;color:var(--text-light);margin-bottom:6px;display:block;}
+.tform-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-end;}
+.tform-field{display:flex;flex-direction:column;gap:6px;min-width:160px;flex:1;}
+.tform-field input,.tform-field select{padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:13.5px;font-family:inherit;background:#fff;transition:border-color .15s,box-shadow .15s;}
+.tform-field input:focus,.tform-field select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(85,70,255,0.10);}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px;}
+.col-chip{padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:600;background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:border-color .15s,color .15s;}
+.col-chip:hover{border-color:var(--blue);color:var(--blue);}
+.condition-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;border:1px solid var(--border);border-radius:12px;margin-bottom:10px;background:#fff;}
+.condition-row select,.condition-row input{padding:8px 10px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;}
+.logic-toggle{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.logic-toggle button{padding:7px 16px;font-size:12.5px;font-weight:700;background:#fff;color:var(--text-light);}
+.logic-toggle button.active{background:var(--blue);color:#fff;}
+.pivot-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px;background:#fff;max-height:520px;}
+.pivot-table-wrap table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.pivot-table-wrap th,.pivot-table-wrap td{padding:9px 12px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap;}
+.pivot-table-wrap th:first-child,.pivot-table-wrap td:first-child{text-align:left;position:sticky;left:0;background:#fff;font-weight:600;}
+.pivot-table-wrap thead th{background:var(--bg);color:var(--text-light);font-weight:700;text-transform:uppercase;font-size:10.5px;letter-spacing:0.03em;}
+.pivot-table-wrap tr.total-row td{font-weight:700;background:var(--bg);}
+.merge-col-list{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto;border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;}
+.merge-col-list label{display:flex;align-items:center;gap:8px;font-size:13px;}
+.preview-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:var(--blue-soft);color:var(--blue);font-weight:700;font-size:13px;}
+.preview-badge.recording{background:#FEE2E2;color:var(--red);}
+
+/* ================================================================
    STATS
    ================================================================ */
 .stat-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:18px;margin-bottom:16px;transition:box-shadow .2s;}
@@ -367,6 +416,8 @@ tbody tr:hover{background:#FAFAFE;}
 .chart-wrap{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;min-height:400px;position:relative;overflow:hidden;transition:box-shadow .2s;}
 .chart-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--pink),var(--orange),var(--cyan));}
 .chart-wrap:hover{box-shadow:var(--shadow-lg);}
+@keyframes chartCanvasIn{from{opacity:0;transform:scale(0.97) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
+#vizCanvas.chart-pop{animation:chartCanvasIn .55s cubic-bezier(.22,1,.36,1);}
 .pinned-card{padding:14px;transition:transform .16s,box-shadow .16s;}
 .pinned-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
 .pinned-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;}
@@ -393,7 +444,23 @@ tbody tr:hover{background:#FAFAFE;}
    REPORT / PROJECTS
    ================================================================ */
 .report-section{margin-bottom:22px;}
+.report-section:last-child{margin-bottom:0;}
 .report-section h4{font-size:14.5px;font-weight:700;margin-bottom:10px;color:var(--blue);}
+.report-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.report-table th, .report-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);}
+.report-table th{color:var(--text-light);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;}
+.report-chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.report-chart{border:1px solid var(--border);border-radius:12px;padding:10px;background:var(--bg);}
+.report-chart .cap{font-size:12px;font-weight:600;margin-bottom:8px;}
+.report-chart img{width:100%;border-radius:8px;display:block;}
+
+@media print{
+  .app-topbar, .sidebar, .side-indicator, .panel-header .btn, .toast, .kbd-hint{ display:none !important; }
+  .app-body{ display:block !important; }
+  .main-panel{ padding:0 !important; }
+  body, #app{ background:#fff !important; }
+  .card{ box-shadow:none !important; border:1px solid #ddd !important; }
+}
 
 /* ================================================================
    CONNECT DATABASE MODAL
