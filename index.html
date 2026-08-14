@@ -15,6 +15,32 @@
 
 <!-- ================= LANDING PAGE ================= -->
 <div id="landing">
+  <div class="landing-chart-deco landing-chart-deco--left" aria-hidden="true">
+    <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="decoBarGrad" x1="0" y1="140" x2="0" y2="0">
+          <stop offset="0" stop-color="#5546FF"/>
+          <stop offset="1" stop-color="#14C8B4"/>
+        </linearGradient>
+      </defs>
+      <g class="deco-bars" fill="url(#decoBarGrad)">
+        <rect class="deco-bar" x="10"  y="70"  width="18" height="60"  rx="4"/>
+        <rect class="deco-bar" x="38"  y="40"  width="18" height="90"  rx="4"/>
+        <rect class="deco-bar" x="66"  y="90"  width="18" height="40"  rx="4"/>
+        <rect class="deco-bar" x="94"  y="20"  width="18" height="110" rx="4"/>
+        <rect class="deco-bar" x="122" y="60"  width="18" height="70"  rx="4"/>
+        <rect class="deco-bar" x="150" y="10"  width="18" height="120" rx="4"/>
+      </g>
+    </svg>
+  </div>
+  <div class="landing-chart-deco landing-chart-deco--right" aria-hidden="true">
+    <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+      <path class="deco-line" d="M4 90 L40 60 L76 75 L112 30 L148 48 L184 15 L220 40" fill="none" stroke="#FF6A3D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="deco-dot" cx="40" cy="60" r="4"/>
+      <circle class="deco-dot deco-dot--2" cx="112" cy="30" r="4"/>
+      <circle class="deco-dot deco-dot--3" cx="184" cy="15" r="4"/>
+    </svg>
+  </div>
   <div class="top-nav">
     <div class="logo-mark">
       <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -202,6 +228,7 @@
       <button data-tab="overview" class="active"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Overview</span></button>
       <button data-tab="dataview"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span>Data</span></button>
       <button data-tab="clean"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 9 15"/><path d="m9 15-4 1 1-4 10.5-10.5a2.1 2.1 0 0 1 3 3Z"/><path d="M4 20h16"/></svg><span>Clean</span></button>
+      <button data-tab="transform"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3 21 7l-4 4"/><path d="M3 7h18"/><path d="M7 21 3 17l4-4"/><path d="M21 17H3"/></svg><span>Transform</span></button>
       <button data-tab="stats"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="5" y2="11"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="19" y1="20" x2="19" y2="14"/></svg><span>Statistics</span></button>
       <button data-tab="visualize"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l7 4"/></svg><span>Visualize</span></button>
       <button data-tab="insights"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a6 6 0 0 0-4 10.5c.6.6 1 1.6 1 2.5h6c0-.9.4-1.9 1-2.5A6 6 0 0 0 12 2Z"/></svg><span>Insights</span></button>
@@ -238,7 +265,9 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="kbd-hint" id="kbdHint">Tip: press <kbd>1</kbd>–<kbd>7</kbd> for tabs, <kbd>Ctrl</kbd>+<kbd>K</kbd> to search</div>
+<div class="kbd-hint" id="kbdHint">Tip: press <kbd>1</kbd>–<kbd>8</kbd> for tabs, <kbd>Ctrl</kbd>+<kbd>K</kbd> to search</div>
+
+<input type="file" id="secondaryFileInput" accept=".csv,.xlsx,.xls" class="hidden">
 
 <div id="paletteOverlay" class="palette-overlay hidden">
   <div class="palette-box">
@@ -247,7 +276,7 @@
   </div>
 </div>
 
-<script src="launch-gate.js"></script>
+<script src="launch-gate.js"><script>
 <script src="script.js"></script>
 </body>
 </html>
